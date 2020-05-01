@@ -1,5 +1,10 @@
 <template>
   <div>
+    <h1 class="title">File trimmer</h1>
+    <button type="button" class="button" @click="handleOpenFiles(`trimmed`)">
+      Select files to be auto trimmed
+    </button>
+    <hr />
     <h1 class="title">Football Rodeo JSON Creator</h1>
     <form v-on:submit.prevent="onSubmit">
       <b-field label="Team Name">
@@ -46,15 +51,33 @@ export default {
     }
   },
   methods: {
-    handleOpenFiles() {
+    handleOpenFiles(trimmed) {
       dialog
         .showOpenDialog({
           properties: ["openFile", "multiSelections"],
         })
         .then((result) => {
-          this.fileNames = result.filePaths.map((f) => {
-            return { id: this.$uuid.v1(), path: f }
-          })
+          if (trimmed) {
+            // trim file names and re-save at same location
+            result.filePaths.map((f) => {
+              const file = path.parse(f)
+              const name = file.name.replace(/[^A-Z0-9]/gi, "-").toLowerCase()
+              const renamed = `${file.dir}/${name}${file.ext}`
+
+              fs.rename(f, renamed, (err) => {
+                if (err) {
+                  alert("An error ocurred updating the file" + err.message)
+                  console.log(err)
+                  return
+                }
+                console.log("File has been renamed and saved", renamed)
+              })
+            })
+          } else {
+            this.fileNames = result.filePaths.map((f) => {
+              return { id: this.$uuid.v1(), path: f }
+            })
+          }
         })
         .catch((err) => {
           console.log(err)
