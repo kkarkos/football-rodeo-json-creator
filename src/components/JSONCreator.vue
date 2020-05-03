@@ -13,8 +13,10 @@
         <b-input required v-model="teamName"></b-input>
       </b-field>
       <b-field label="Country">
-        <p>For int use earth_africa</p>
         <b-input required v-model="country"></b-input>
+      </b-field>
+      <b-field label="Icon (For int use 'earth_africa', for german teams 'germany'">
+        <b-input required v-model="icon"></b-input>
       </b-field>
       <b-field label="Division (1stTier, 2ndTier, Legends etc)">
         <b-input required v-model="division"></b-input>
@@ -46,6 +48,7 @@ export default {
       division: "",
       teamName: "",
       country: "",
+      icon: "",
       fileNames: []
     };
   },
@@ -100,6 +103,7 @@ export default {
         id: this.teamName.replace(/[^A-Z0-9]/gi, "-").toLowerCase(),
         name: this.teamName,
         country: this.country.toLowerCase(),
+        icon: this.icon.toLowerCase(),
         division: this.division.trim()
       };
 
