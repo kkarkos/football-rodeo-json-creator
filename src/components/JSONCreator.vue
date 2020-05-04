@@ -122,7 +122,12 @@ export default {
 
         const data = JSON.stringify(team);
 
-        fs.writeFileSync(`${team.id}.json`, data, err => {
+        // ignore selected file name and replace with fixed team name
+        const find = fileName.split("/");
+        const word = find.slice(-1)[0].toString();
+        const path = fileName.replace(word, "");
+
+        fs.writeFileSync(`${path}${team.id}.json`, data, err => {
           if (err) {
             alert("An error ocurred creating the file " + err.message);
           }
